@@ -1,8 +1,19 @@
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('counter-btn')
 export class CounterBtn extends LitElement {
+  @property({ type: Number, reflect: true }) count!: number;
+  @property({ type: Boolean, reflect: true, }) disabled!: boolean;
+  @property({ type: String,  reflect: true, }) title!: string;
+
+  constructor() {
+    super();
+    this.count = 10;
+    this.disabled = false;
+    this.title = 'WC-Lit Counter'
+  }
+
   // 定義樣式
   static styles = css`
     .counter-wrapper {
@@ -12,7 +23,7 @@ export class CounterBtn extends LitElement {
       gap: 16px;
       padding: 32px;
     }
-    
+
     .counter {
       display: flex;
       align-items: center;
@@ -39,19 +50,26 @@ export class CounterBtn extends LitElement {
       background-color: #0d2b44;
       color: white;
     }
+
+    button:disabled {
+      cursor: not-allowed;
+      color: #ababab;
+      background-color: #d7d7d7;
+    }
   `
 
   // 寫入模板相關內容
   render() {
     return html`
       <div class="counter-wrapper">
+        <h3>${this.title}</h3>
         <div class="counter">
           <button class="decrement">-</button>
-          <span>Count:</span>
+          <span>Count: ${this.count}</span>
           <button class="increment">+</button>
         </div>
-        <button class="reset">Reset</button>
+        <button class="reset" ?disabled=${this.disabled}>Reset</button>
       </div>
-    `
+    `;
   }
 }
