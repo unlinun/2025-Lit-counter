@@ -7,6 +7,7 @@ export class CounterBtn extends LitElement {
   @property({ type: Boolean, reflect: true, }) disabled!: boolean;
   @property({ type: String,  reflect: true, }) title!: string;
 
+  // 建構函數：初始化組件屬性
   constructor() {
     super();
     this.count = 10;
@@ -58,17 +59,46 @@ export class CounterBtn extends LitElement {
     }
   `
 
+  // 事件處理方法
+  increment() {
+    this.count++;
+    this._dispatchCountChanged();
+  }
+
+  decrement() {
+    this.count--;
+    this._dispatchCountChanged();
+  }
+
+  reset() {
+    this.count = 10;
+    this._dispatchCountChanged();
+  }
+
+  // 發送事件給外部
+  private _dispatchCountChanged() {
+    this.dispatchEvent(
+      new CustomEvent('count-changed', {
+        detail: { count: this.count },
+        bubbles: true,
+        composed: true,
+      })
+    );
+  }
+
   // 寫入模板相關內容
   render() {
     return html`
       <div class="counter-wrapper">
         <h3>${this.title}</h3>
         <div class="counter">
-          <button class="decrement">-</button>
+          <button class="decrement" @click=${this.decrement}>-</button>
           <span>Count: ${this.count}</span>
-          <button class="increment">+</button>
+          <button class="increment" @click=${this.increment}>+</button>
         </div>
-        <button class="reset" ?disabled=${this.disabled}>Reset</button>
+        <button class="reset" ?disabled=${this.disabled} @click=${this.reset}>
+          Reset
+        </button>
       </div>
     `;
   }
